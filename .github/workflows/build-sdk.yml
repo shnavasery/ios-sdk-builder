@@ -1,11 +1,11 @@
 name: Build Darwin SDK
 
 on:
-  workflow_dispatch: # این خط اجازه میده دستی هم Workflow رو اجرا کنید
+  workflow_dispatch:
 
 jobs:
   build-sdk:
-    runs-on: macos-latest # استفاده از ماشین مجازی مک
+    runs-on: macos-latest
 
     steps:
       - name: Checkout repository
@@ -21,8 +21,7 @@ jobs:
 
       - name: Install xtool
         run: |
-          brew tap xtool-org/xtool
-          brew install xtool
+          brew install xtool-org/tap/xtool
 
       - name: Build Darwin SDK
         run: |
