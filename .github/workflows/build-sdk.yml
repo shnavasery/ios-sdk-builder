@@ -1,0 +1,37 @@
+name: Build Darwin SDK
+
+on:
+  workflow_dispatch: # این خط اجازه میده دستی هم Workflow رو اجرا کنید
+
+jobs:
+  build-sdk:
+    runs-on: macos-latest # استفاده از ماشین مجازی مک
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Select latest Xcode
+        run: |
+          xcode=$(ls -d /Applications/Xcode*.app | sort -V | tail -1)
+          echo "Selecting $xcode"
+          sudo xcode-select -s "$xcode"
+          echo "XCODE_APP=$xcode" >> "$GITHUB_ENV"
+          xcodebuild -version
+
+      - name: Install xtool
+        run: |
+          brew tap xtool-org/xtool
+          brew install xtool
+
+      - name: Build Darwin SDK
+        run: |
+          mkdir -p out
+          xtool sdk build "$XCODE_APP" --arch x86_64 out/
+          ls -la out/
+
+      - name: Upload SDK as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: darwin-sdk
+          path: out/
