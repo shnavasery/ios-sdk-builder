@@ -29,8 +29,13 @@ jobs:
           xtool sdk build "$XCODE_APP" --arch x86_64 out/
           ls -la out/
 
+      - name: Archive SDK
+        run: |
+          cd out
+          tar -czvf ../darwin-sdk.tar.gz .
+
       - name: Upload SDK as artifact
         uses: actions/upload-artifact@v4
         with:
           name: darwin-sdk
-          path: out/
+          path: darwin-sdk.tar.gz
